@@ -22,6 +22,9 @@ class HomeScreen extends HookConsumerWidget {
       // double delta = MediaQuery.of(context).size.height * 0.10;
 
       if (maxScroll == currentScroll) {
+        //
+        //one more condition here to determine for load more ro not (is this the last page or not)
+        //
         log("Get more data");
         currentPage.value++;
         ref.read(listProvider.notifier).loadData(currentPage.value);
