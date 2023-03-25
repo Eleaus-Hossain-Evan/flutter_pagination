@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
@@ -17,14 +19,17 @@ class ListState extends Equatable {
 
   ListState copyWith({
     IList<int>? list,
-    bool? isLoading,
+    bool? loading,
   }) {
     return ListState(
       list: list ?? this.list,
-      loading: isLoading ?? loading,
+      loading: loading ?? this.loading,
     );
   }
 
   @override
   List<Object> get props => [list, loading];
+
+  @override
+  String toString() => 'ListState(list: $list, loading: $loading)';
 }

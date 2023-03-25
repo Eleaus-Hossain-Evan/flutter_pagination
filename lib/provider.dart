@@ -9,19 +9,20 @@ class ListNotifier extends StateNotifier<ListState> {
     loadData(0);
   }
 
-  void loadData(int page) async {
+  Future<List<int>> loadData(int page) async {
+    state = state.copyWith(loading: true, list: state.list);
     final list = <int>[];
-    state = state.copyWith(isLoading: true);
 
     await Future.delayed(const Duration(seconds: 2));
 
     List.generate(10, (index) => list.add((page * 10) + index));
     log('list: $list');
 
-    state = state.copyWith(
-      isLoading: false,
-      list: state.list.addAll(list.lock),
-    );
+    final newList = state.list.addAll(list.lock);
+
+    state = state.copyWith(loading: false, list: newList);
+
+    return newList.unlock;
   }
 }
 
