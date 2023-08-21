@@ -33,3 +33,4 @@ class ListState extends Equatable {
   @override
   String toString() => 'ListState(list: $list, loading: $loading)';
 }
+   
