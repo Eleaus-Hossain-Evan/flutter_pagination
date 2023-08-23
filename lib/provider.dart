@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/domain/product.dart';
 import 'package:flutter_app/repo.dart';
 import 'package:flutter_app/state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:http/http.dart' as http;
 
-import 'domain.dart';
+import 'domain/domain.dart';
 
 part 'provider.g.dart';
 
@@ -36,6 +39,21 @@ class ListNotifier extends StateNotifier<ListState> {
     state = state.copyWith(loading: false, list: newList);
 
     return newList.unlock;
+  }
+}
+
+@riverpod
+class ProductList extends _$ProductList {
+  Future<ProductResponse> _fetch() async {
+    final json = await http
+        .get(Uri.parse('https://dummyjson.com/products?limit=10&skip=20'));
+    final products = ProductResponse.fromJson(json.body);
+    return products;
+  }
+
+  @override
+  FutureOr<ProductResponse> build() {
+    return _fetch();
   }
 }
 

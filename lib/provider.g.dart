@@ -6,6 +6,21 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$productListHash() => r'724a19c0863afe6ed23c69146efd7611a5cb8a57';
+
+/// See also [ProductList].
+@ProviderFor(ProductList)
+final productListProvider =
+    AutoDisposeAsyncNotifierProvider<ProductList, ProductResponse>.internal(
+  ProductList.new,
+  name: r'productListProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$productListHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ProductList = AutoDisposeAsyncNotifier<ProductResponse>;
 String _$fetchDataHash() => r'309153eef1a4191e2155873cec3eade4bf9206ca';
 
 /// Copied from Dart SDK
