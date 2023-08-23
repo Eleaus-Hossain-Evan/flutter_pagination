@@ -23,16 +23,16 @@ class HomeScreen extends HookConsumerWidget {
               child: const Text('Go to list screen'),
             ),
           ),
-          Center(
-            child: FilledButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const DetailScreen(),
-                ),
-              ),
-              child: const Text('Go to Detail screen'),
-            ),
-          ),
+          // Center(
+          //   child: FilledButton(
+          //     onPressed: () => Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder: (context) => const DetailScreen(),
+          //       ),
+          //     ),
+          //     child: const Text('Go to Detail screen'),
+          //   ),
+          // ),
         ],
       ),
     );

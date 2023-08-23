@@ -22,6 +22,16 @@ class Repo {
     return api2.get(
         endPoint: "products?limit=10&skip=${page * 10}",
         fromData: (data) => ProductResponse.fromMap(data),
-        withToken: true);
+        withToken: false);
+  }
+
+  Future<Either<CleanFailure, Product>> fetchProductDetail(int id) {
+    final api2 = NetworkHandler.instance
+      ..setup(baseUrl: 'https://dummyjson.com/');
+
+    return api2.get(
+        endPoint: "products/$id",
+        fromData: (data) => Product.fromMap(data),
+        withToken: false);
   }
 }

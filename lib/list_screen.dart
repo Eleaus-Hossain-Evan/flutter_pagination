@@ -3,78 +3,114 @@ import 'dart:math';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/detail_screen.dart';
 import 'package:flutter_app/provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ListScreen extends HookConsumerWidget {
   const ListScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(listProvider);
-    final scrollController = useScrollController();
-
-    final currentPage = useState(0);
-
-    Future<void> getData() async {
-      await Future.microtask(
-        () => ref.read(listProvider.notifier).loadData(currentPage.value),
-      );
-    }
-
-    scrollListener() {
-      double maxScroll = scrollController.position.maxScrollExtent;
-      double currentScroll = scrollController.position.pixels;
-
-      if (maxScroll == currentScroll) {
-        //
-        //one more condition here to determine for load more ro not (is this the last page or not)
-        //
-        print("Get more data");
-        currentPage.value++;
-        // ref.read(listProvider.notifier).loadData(currentPage.value);
-      }
-    }
-
-    useMemoized(getData, [currentPage.value]);
-
-    ref.listen(listProvider, (previous, next) {
-      if (previous!.loading == false && next.loading) {
-        BotToast.showLoading();
-      }
-      if (previous.loading == true && next.loading == false) {
-        BotToast.closeAllLoading();
-      }
-    });
-
-    useEffect(() {
-      scrollController.addListener(scrollListener);
-      BotToast.showLoading();
-      return () {
-        ref.invalidate(listProvider);
-        BotToast.closeAllLoading();
-      };
-    }, []);
-
     return Scaffold(
-      body: ListView.builder(
-        controller: scrollController,
-        itemBuilder: (context, index) {
-          final item = state.list[index];
+      appBar: AppBar(title: const Text("Riverpod Generator")),
+      body: RefreshIndicator(
+        onRefresh: () => ref.refresh(productListProvider(1).future),
+        child: ListView.custom(
+          childrenDelegate: SliverChildBuilderDelegate(
+            (context, index) {
+              const pageSize = 10;
 
-          // final page = index ~/ 10;
-          // final itemIndex = index % 10;
-          // ref.watch(listProvider.notifier).loadData(page);
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 24.0),
-            child: ListTile(
-              title: Text('$item'),
-              tileColor: Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                  .withOpacity(.5),
+              final page = index ~/ pageSize + 1;
+              final indexInPage = index % pageSize;
+              final productList = ref.watch(
+                productListProvider(page),
+              );
+
+              return productList.when(
+                data: (data) {
+                  if (indexInPage >= data.products.length) return null;
+
+                  final product = data.products[indexInPage];
+                  return ListTile(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(id: product.id),
+                        )),
+                    leading: Image.network(product.thumbnail),
+                    title: Text(
+                      product.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(
+                      product.description,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    trailing: Text("\$${product.price}"),
+                  );
+                },
+                error: (error, stackTrace) => Text(error.toString()),
+                loading: () => const ProductShimmer(),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ProductShimmer extends StatelessWidget {
+  const ProductShimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade400,
+      highlightColor: Colors.grey.shade100,
+      child: ListTile(
+        isThreeLine: true,
+        leading: Container(
+          color: Colors.white,
+          width: 80,
+          height: 80,
+        ),
+        title: Container(
+          color: Colors.white,
+          width: 200,
+          height: 30,
+          margin: const EdgeInsets.only(bottom: 10),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Colors.white,
+              width: 200,
+              height: 14,
+              margin: const EdgeInsets.only(bottom: 6),
             ),
-          );
-        },
-        itemCount: state.list.length,
+            Container(
+              color: Colors.white,
+              width: 100,
+              height: 14,
+            ),
+          ],
+        ),
+        trailing: Container(
+          color: Colors.white,
+          width: 20,
+          height: 30,
+        ),
       ),
     );
   }

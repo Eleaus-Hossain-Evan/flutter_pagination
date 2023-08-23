@@ -1,29 +1,100 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'package:flutter_app/provider.dart';
 
 class DetailScreen extends HookConsumerWidget {
   static const route = '/detail';
 
-  const DetailScreen({super.key});
+  const DetailScreen({
+    super.key,
+    required this.id,
+  });
+
+  final int id;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(fetchDataProvider(parcelId: "JWCNP85BUDW2NDA7"));
+    final state = ref.watch(productDetailProvider(id));
+    // useEffect(() {
+    //   Future.microtask(() => ref.read(productDetailProvider(id).future));
+    //   return null;
+    // }, const []);
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Detail'),
         ),
         body: state.when(
           data: (data) => RefreshIndicator.adaptive(
-            onRefresh: () => ref.refresh(
-                fetchDataProvider(parcelId: "JWCNP85BUDW2NDA7").future),
+            onRefresh: () => ref.refresh(productDetailProvider(id).future),
             child: ListView(
               children: [
-                Text('Name: ${data.customerInfo.name}'),
-                Text('Phone:  ${data.customerInfo.phone}'),
-                Text('Address: ${data.customerInfo.address} '),
-                Text('Status: ${data.regularStatus} '),
+                Image.network(
+                  data.thumbnail,
+                  height: 200,
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    data.title,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          data.description,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        "\$${data.price}",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: data.images
+                          .map((e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Card(
+                                  elevation: 6,
+                                  child: Image.network(
+                                    e,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

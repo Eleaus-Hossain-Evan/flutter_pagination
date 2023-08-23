@@ -16,44 +16,31 @@ import 'domain/domain.dart';
 
 part 'provider.g.dart';
 
-final listProvider = StateNotifierProvider<ListNotifier, ListState>((ref) {
-  return ListNotifier();
-});
+@riverpod
+class ProductList extends _$ProductList {
+  final repo = Repo();
 
-class ListNotifier extends StateNotifier<ListState> {
-  ListNotifier() : super(ListState.init()) {
-    loadData(0);
+  Future<ProductResponse> _fetch(int page) async {
+    final result = await repo.fetchProduct(page);
+    return result.fold((l) => showErrorToast(l.error.message), (r) => r);
   }
 
-  Future<List<int>> loadData(int page) async {
-    state = state.copyWith(loading: true, list: state.list);
-    final list = <int>[];
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    List.generate(10, (index) => list.add((page * 10) + index));
-    log('list: $list');
-
-    final newList = state.list.addAll(list.lock);
-
-    state = state.copyWith(loading: false, list: newList);
-
-    return newList.unlock;
+  @override
+  FutureOr<ProductResponse> build(int page) {
+    return _fetch(page);
   }
 }
 
 @riverpod
-class ProductList extends _$ProductList {
-  Future<ProductResponse> _fetch() async {
-    final json = await http
-        .get(Uri.parse('https://dummyjson.com/products?limit=10&skip=20'));
-    final products = ProductResponse.fromJson(json.body);
-    return products;
+class ProductDetail extends _$ProductDetail {
+  Future<Product> _fetch(int id) async {
+    final result = await Repo().fetchProductDetail(id);
+    return result.fold((l) => showErrorToast(l.error.message), (r) => r);
   }
 
   @override
-  FutureOr<ProductResponse> build() {
-    return _fetch();
+  FutureOr<Product> build(int id) async {
+    return _fetch(id);
   }
 }
 
