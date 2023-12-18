@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/domain/product.dart';
-import 'package:flutter_app/repo.dart';
-import 'package:flutter_app/state.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_app/infrastructure/repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:http/http.dart' as http;
 
-import 'domain/domain.dart';
+import '../domain/domain.dart';
 
 part 'provider.g.dart';
 

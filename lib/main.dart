@@ -2,7 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'home_screen.dart';
+import 'presentation/home_screen.dart';
 import 'network_util/network_handler.dart';
 
 void main() {

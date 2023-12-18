@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
@@ -33,4 +31,3 @@ class ListState extends Equatable {
   @override
   String toString() => 'ListState(list: $list, loading: $loading)';
 }
-   

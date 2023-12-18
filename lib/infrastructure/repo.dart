@@ -2,7 +2,7 @@ import 'package:flutter_app/domain/domain.dart';
 import 'package:flutter_app/network_util/network_handler.dart';
 import 'package:http/http.dart';
 
-import 'domain/product.dart';
+import '../domain/product.dart';
 
 class Repo {
   final api = NetworkHandler.instance;
