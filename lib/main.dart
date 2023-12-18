@@ -1,14 +1,22 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'presentation/home_screen.dart';
 import 'network_util/network_handler.dart';
+import 'presentation/home_screen.dart';
 
 void main() {
-   NetworkHandler.instance
+  Logger.init(
+    true,
+    isShowNavigation: true,
+    isShowFile: false,
+    isShowTime: false,
+  );
+  NetworkHandler.instance
     ..setup(baseUrl: "https://api.courier.b2gsoft.xyz/", showLogs: false)
-    ..setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY0YzRkMjcxY2VjNWIzNjU3ODViODk4OSIsIm5hbWUiOiJmb3JoYWQiLCJwaG9uZSI6IjAxNzI4ODk3MjU1IiwiZW1haWwiOiJhYmRAZ21haWwuY29tIiwiaHViSWQiOiI2NGFkMTdhMzQ1ZTM4OTJlMzQyMjVhNTgiLCJodWJOYW1lIjoibmlrdW5qYSIsInJvbGUiOiJtZXJjaGFudCJ9LCJpYXQiOjE2OTA4OTAxNzMsImV4cCI6MTcyMjQyNjE3M30.EXQ-PT_uiGDYSiKcgtd8tLVR9uVq-V63sbGreqrN9u0');
+    ..setToken(
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjY0YzRkMjcxY2VjNWIzNjU3ODViODk4OSIsIm5hbWUiOiJmb3JoYWQiLCJwaG9uZSI6IjAxNzI4ODk3MjU1IiwiZW1haWwiOiJhYmRAZ21haWwuY29tIiwiaHViSWQiOiI2NGFkMTdhMzQ1ZTM4OTJlMzQyMjVhNTgiLCJodWJOYW1lIjoibmlrdW5qYSIsInJvbGUiOiJtZXJjaGFudCJ9LCJpYXQiOjE2OTA4OTAxNzMsImV4cCI6MTcyMjQyNjE3M30.EXQ-PT_uiGDYSiKcgtd8tLVR9uVq-V63sbGreqrN9u0');
 
   runApp(const ProviderScope(child: MyApp()));
 }

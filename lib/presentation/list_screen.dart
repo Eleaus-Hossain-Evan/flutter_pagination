@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/detail_screen.dart';
 import 'package:flutter_app/application/provider.dart';
+import 'package:flutter_app/presentation/detail_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
