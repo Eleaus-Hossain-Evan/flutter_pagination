@@ -4,12 +4,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_easylogger/flutter_logger.dart';
-import 'package:http/http.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:http/http.dart';
 
 import 'network_failure.dart';
 
 export 'package:fpdart/fpdart.dart';
+
 export 'network_failure.dart';
 
 class NetworkHandler {
@@ -34,6 +35,8 @@ class NetworkHandler {
   }
 
   void setToken(String? token) => _token = token;
+
+  get token => _token;
 
   Map<String, String> header(bool withToken) {
     if (withToken) {

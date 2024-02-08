@@ -171,6 +171,38 @@ class _ProductListProviderElement
   int get page => (origin as ProductListProvider).page;
 }
 
+String _$trendingMoviesListHash() =>
+    r'15aa6432c537aed388366d0fffceb25f0f919e2e';
+
+/// See also [TrendingMoviesList].
+@ProviderFor(TrendingMoviesList)
+final trendingMoviesListProvider = AutoDisposeAsyncNotifierProvider<
+    TrendingMoviesList, List<Product>>.internal(
+  TrendingMoviesList.new,
+  name: r'trendingMoviesListProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$trendingMoviesListHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$TrendingMoviesList = AutoDisposeAsyncNotifier<List<Product>>;
+String _$dataFetchDioHash() => r'b6a97fe31b0db9f838a7ab4032180f925ba354f8';
+
+/// See also [DataFetchDio].
+@ProviderFor(DataFetchDio)
+final dataFetchDioProvider =
+    AutoDisposeAsyncNotifierProvider<DataFetchDio, List<Model>>.internal(
+  DataFetchDio.new,
+  name: r'dataFetchDioProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$dataFetchDioHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$DataFetchDio = AutoDisposeAsyncNotifier<List<Model>>;
 String _$productDetailHash() => r'428c3da8b3583aabd6a42f6fb511391c01c17da3';
 
 abstract class _$ProductDetail

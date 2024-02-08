@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'network_util/network_handler.dart';
 import 'presentation/home_screen.dart';
+import 'presentation/infinite_scroll_pagination_config.dart';
 
 void main() {
   Logger.init(
@@ -27,23 +28,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter App',
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
-        useMaterial3: true,
-        brightness: Brightness.light,
+    return InfiniteScrollPaginationConfig(
+      emptyListBuilder: (_) =>
+          const Center(child: Text('Sorry, nothing found - ISPC')),
+      initialLoadingErrorBuilder: (_, e, ___) =>
+          Center(child: Text('$e - ISPC')),
+      errorBuilder: (_, e, __) =>
+          const Center(child: Text('Loading Error - ISPC')),
+      numSkeletonsForLoading: 2,
+      child: MaterialApp(
+        title: 'Flutter App',
+        themeMode: ThemeMode.light,
+        theme: ThemeData(
+          colorSchemeSeed: Colors.indigo,
+          useMaterial3: true,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          colorSchemeSeed: Colors.blue,
+          useMaterial3: true,
+          brightness: Brightness.dark,
+        ),
+        home: const HomeScreen(),
+        debugShowCheckedModeBanner: false,
+        builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
       ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      home: const HomeScreen(),
-      debugShowCheckedModeBanner: false,
-      builder: BotToastInit(),
-      navigatorObservers: [BotToastNavigatorObserver()],
     );
   }
 }

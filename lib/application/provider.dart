@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/domain/product.dart';
 import 'package:flutter_app/infrastructure/repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_infinite_scroll_pagination/riverpod_infinite_scroll_pagination.dart';
 
 import '../domain/domain.dart';
 
@@ -22,6 +23,31 @@ class ProductList extends _$ProductList {
   @override
   FutureOr<ProductResponse> build(int page) {
     return _fetch(page);
+  }
+}
+
+//A normal riverpod notifier.
+@riverpod
+class TrendingMoviesList extends _$TrendingMoviesList
+    with PaginatedDataMixin<Product>
+    implements PaginatedNotifier<Product> {
+  @override
+  FutureOr<List<Product>> build() async {
+    return init(
+      dataFetcher: PaginatedDataRepository(
+        fetcher: Repo().fetchProductDio,
+      ),
+    );
+  }
+}
+
+@riverpod
+class DataFetchDio extends _$DataFetchDio
+    with PaginatedDataMixin<Model>
+    implements PaginatedNotifier<Model> {
+  @override
+  FutureOr<List<Model>> build() {
+    return init(dataFetcher: PaginatedDataRepository(fetcher: Repo().fetchDataDio));
   }
 }
 

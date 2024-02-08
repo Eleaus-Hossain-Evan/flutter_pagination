@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 
 class ModelResponse extends Equatable {
   final Model data;
@@ -68,7 +69,7 @@ class Model extends Equatable {
   final String serialId;
   final String qrCode;
   final String createdAt;
-  final SourceHub sourceHub;
+  final SourceHub? sourceHub;
   const Model({
     required this.id,
     required this.merchantInfo,
@@ -110,7 +111,7 @@ class Model extends Equatable {
     String? serialId,
     String? qrCode,
     String? createdAt,
-    SourceHub? sourceHub,
+    ValueGetter<SourceHub?>? sourceHub,
   }) {
     return Model(
       id: id ?? this.id,
@@ -124,7 +125,7 @@ class Model extends Equatable {
       serialId: serialId ?? this.serialId,
       qrCode: qrCode ?? this.qrCode,
       createdAt: createdAt ?? this.createdAt,
-      sourceHub: sourceHub ?? this.sourceHub,
+      sourceHub: sourceHub != null ? sourceHub() : this.sourceHub,
     );
   }
 
@@ -141,7 +142,7 @@ class Model extends Equatable {
       'serialId': serialId,
       'qrCode': qrCode,
       'createdAt': createdAt,
-      'sourceHub': sourceHub.toMap(),
+      'sourceHub': sourceHub?.toMap(),
     };
   }
 
@@ -160,7 +161,8 @@ class Model extends Equatable {
       serialId: map['serialId'] ?? '',
       qrCode: map['qrCode'] ?? '',
       createdAt: map['createdAt'] ?? '',
-      sourceHub: SourceHub.fromMap(map['sourceHub']),
+      sourceHub:
+          map['sourceHub'] != null ? SourceHub.fromMap(map['sourceHub']) : null,
     );
   }
 
@@ -170,11 +172,11 @@ class Model extends Equatable {
 
   @override
   String toString() {
-    return 'Data(_id: $id, merchantInfo: $merchantInfo, regularParcelInfo: $regularParcelInfo, regularPayment: $regularPayment, regularStatus: $regularStatus, merchantUpdate: $merchantUpdate, customerInfo: $customerInfo, regularStatusLogs: $regularStatusLogs, serialId: $serialId, qrCode: $qrCode, createdAt: $createdAt, sourceHub: $sourceHub)';
+    return 'Model(id: $id, merchantInfo: $merchantInfo, regularParcelInfo: $regularParcelInfo, regularPayment: $regularPayment, regularStatus: $regularStatus, merchantUpdate: $merchantUpdate, customerInfo: $customerInfo, regularStatusLogs: $regularStatusLogs, serialId: $serialId, qrCode: $qrCode, createdAt: $createdAt, sourceHub: $sourceHub)';
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       merchantInfo,

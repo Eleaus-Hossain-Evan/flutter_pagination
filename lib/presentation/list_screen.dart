@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/application/provider.dart';
 import 'package:flutter_app/presentation/detail_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_infinite_scroll_pagination/riverpod_infinite_scroll_pagination.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ListScreen extends HookConsumerWidget {
@@ -10,53 +11,31 @@ class ListScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text("Riverpod Generator")),
-      body: RefreshIndicator(
-        onRefresh: () => ref.refresh(productListProvider(1).future),
-        child: ListView.custom(
-          childrenDelegate: SliverChildBuilderDelegate(
-            (context, index) {
-              const pageSize = 10;
-
-              final page = index ~/ pageSize + 1;
-              final indexInPage = index % pageSize;
-              final productList = ref.watch(
-                productListProvider(page),
-              );
-
-              return productList.when(
-                data: (data) {
-                  if (indexInPage >= data.products.length) return null;
-
-                  final product = data.products[indexInPage];
-                  return ListTile(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(id: product.id),
-                        )),
-                    leading: Image.network(product.thumbnail),
-                    title: Text(
-                      product.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      product.description,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    trailing: Text("\$${product.price}"),
-                  );
-                },
-                error: (error, stackTrace) => Text(error.toString()),
-                loading: () => const ProductShimmer(),
-              );
-            },
+      body: PaginatedListView(
+        state: ref.watch(trendingMoviesListProvider),
+        itemBuilder: (context, product) => ListTile(
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailScreen(id: product.id),
+              )),
+          leading: Image.network(product.thumbnail),
+          title: Text(
+            product.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
           ),
+          subtitle: Text(
+            product.description,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          trailing: Text("\$${product.price}"),
         ),
+        notifier: ref.read(trendingMoviesListProvider.notifier),
       ),
     );
   }
