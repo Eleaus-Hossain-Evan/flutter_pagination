@@ -4,7 +4,7 @@ import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'network_util/network_handler.dart';
-import 'presentation/home_screen.dart';
+import 'home_screen.dart';
 
 void main() {
   Logger.init(
